@@ -15,15 +15,18 @@
     {% if user.is_authenticated %}
         <p><b>Hello, {{ user.username }}</b></p>
         <nav>
-            <a href="{% url 'contact_list' %}">All Contacts</a>
-            <a href="{% url 'new_contact' %}">New Contact</a>
-            <a href="">Change Password</a>
-            <a href="{% url 'logout' %}">Log Out</a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <a href="{% url 'contact_list' %}">All Contacts</a>
+                <a href="{% url 'new_contact' %}">New Contact</a>
+                <a href="">Change Password</a>
+                <input type="submit" value="Log Out">
+            </form>
         </nav>
     {% else %}
         <nav>
             <a href="{% url 'login' %}">Log In</a>
-            <a href="">Sign Up</a>
+            <a href="{% url 'signup' %}">Sign Up</a>
         </nav>
     {% endif %}
 </header>
