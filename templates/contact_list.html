@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% for contact in contact_list %}
-        <h2>
-            <a href="{{ contact.get_absolute_url }}">{{ contact.first_name }} {{ contact.last_name }}</a>
-        </h2>
-    {% endfor %}
+    {% if user.is_authenticated %}
+        {% for contact in contact_list %}
+            <h2>
+                <a href="{{ contact.get_absolute_url }}">{{ contact.first_name }} {{ contact.last_name }}</a>
+            </h2>
+        {% endfor %}
+    {% else %}
+        <p class="notice">You are not logged in. Log in or sign up to access the
+            <b>Contacts</b> application.</p>
+    {% endif %}
 
 {% endblock content %}

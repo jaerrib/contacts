@@ -12,10 +12,20 @@
 <body>
 <header>
     <h1>Contacts</h1>
-    <nav>
-        <a href="{% url 'contact_list' %}">All Contacts</a>
-        <a href="{% url 'new_contact' %}">New Contact</a>
-    </nav>
+    {% if user.is_authenticated %}
+        <p><b>Hello, {{ user.username }}</b></p>
+        <nav>
+            <a href="{% url 'contact_list' %}">All Contacts</a>
+            <a href="{% url 'new_contact' %}">New Contact</a>
+            <a href="">Change Password</a>
+            <a href="{% url 'logout' %}">Log Out</a>
+        </nav>
+    {% else %}
+        <nav>
+            <a href="{% url 'login' %}">Log In</a>
+            <a href="">Sign Up</a>
+        </nav>
+    {% endif %}
 </header>
 <main>
     {% block content %}
