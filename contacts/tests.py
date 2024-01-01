@@ -41,7 +41,7 @@ class ContactModelTest(TestCase):
         self.assertContains(response, self.contact.first_name)
         self.assertTemplateUsed(response, "contact_list.html")
 
-    def test_contact_detailview(self):
+    def test_contact_detail_view(self):
         response = self.client.get(
             reverse("contact_detail", kwargs={"pk": self.contact.pk})
         )
@@ -50,3 +50,40 @@ class ContactModelTest(TestCase):
         self.assertEqual(no_response.status_code, 404)
         self.assertContains(response, self.contact.first_name)
         self.assertTemplateUsed(response, "contact_detail.html")
+
+    def test_contact_create_view(self):
+        response = self.client.post(
+            reverse("new_contact"),
+            {
+                "first_name": "First",
+                "last_name": "Last",
+                "phone_number": "000-000-0000",
+                "email": "firstlast@email.com",
+                "creator": self.user.id,
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Contact.objects.last().first_name, "First")
+        self.assertEqual(Contact.objects.last().last_name, "Last")
+        self.assertEqual(Contact.objects.last().phone_number, "000-000-0000")
+        self.assertEqual(Contact.objects.last().email, "firstlast@email.com")
+
+    def test_contact_update_view(self):
+        response = self.client.post(
+            reverse("contact_edit", args="1"),
+            {
+                "first_name": "Eric",
+                "last_name": "Idle",
+                "phone_number": "000-000-0001",
+                "email": "ericidle@pythonic.com",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Contact.objects.last().first_name, "Eric")
+        self.assertEqual(Contact.objects.last().last_name, "Idle")
+        self.assertEqual(Contact.objects.last().phone_number, "000-000-0001")
+        self.assertEqual(Contact.objects.last().email, "ericidle@pythonic.com")
+
+    def test_contact_delete_view(self):
+        response = self.client.post(reverse("contact_delete", args="1"))
+        self.assertEqual(response.status_code, 302)

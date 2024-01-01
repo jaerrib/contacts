@@ -10,5 +10,8 @@
         <p>Email: <a
                 href="mailto:{{ object.email }}">{{ object.email }}</a>
         </p>
+        <a class="button" href="{% url 'contact_edit' contact.pk %}">Edit</a>
+        <a class="button" a
+           href="{% url 'contact_delete' contact.pk %}">Delete</a>
     </article>
 {% endblock content %}

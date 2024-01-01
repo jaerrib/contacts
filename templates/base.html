@@ -11,7 +11,11 @@
 </head>
 <body>
 <header>
-    <h1><a href="{% url 'contact_list' %}">Contacts</a></h1>
+    <h1>Contacts</h1>
+    <nav>
+        <a href="{% url 'contact_list' %}">All Contacts</a>
+        <a href="{% url 'new_contact' %}">New Contact</a>
+    </nav>
 </header>
 <main>
     {% block content %}
