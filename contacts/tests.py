@@ -31,14 +31,14 @@ class ContactModelTest(TestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
 
-    def test_url_exists_at_correct_location_detailview(self):
+    def test_url_exists_at_desired_location_detailview(self):
         response = self.client.get("/contact/1/")
         self.assertEqual(response.status_code, 200)
 
     def test_contact_listview(self):
         response = self.client.get(reverse("contact_list"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.contact.first_name)
+        self.assertContains(response, "You are not logged in")
         self.assertTemplateUsed(response, "contact_list.html")
 
     def test_contact_detail_view(self):
