@@ -2,8 +2,7 @@
 
 {% block content %}
     <article>
-        <h2><a href="">{{ object.first_name }} {{ object.last_name }}</a>
-        </h2>
+        <h2>{{ object.first_name }} {{ object.last_name }}</h2>
         <p>Phone number: <a
                 href="tel:{{ object.phone_number }}">{{ object.phone_number }}</a>
         </p>

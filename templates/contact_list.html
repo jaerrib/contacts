@@ -2,14 +2,18 @@
 
 {% block content %}
     {% if user.is_authenticated %}
+        <h2>My Contacts</h2>
         {% for contact in contact_list %}
-            <h2>
-                <a href="{{ contact.get_absolute_url }}">{{ contact.first_name }} {{ contact.last_name }}</a>
-            </h2>
+            <ul>
+                {% if contact.creator.pk == request.user.pk %}
+                    <li>
+                        <a href="{{ contact.get_absolute_url }}">{{ contact.last_name }}, {{ contact.first_name }} </a>
+                    </li>
+                {% endif %}
+            </ul>
         {% endfor %}
-    {% else %}
-        <p class="notice">You are not logged in. Log in or sign up to access the
-            <b>Contacts</b> application.</p>
+        <p class="notice">You can add contacts using the <b>New Contact</b>
+            button in the site nav.</p>
     {% endif %}
 
 {% endblock content %}
