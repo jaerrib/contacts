@@ -1,4 +1,6 @@
+import pandas
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.http import FileResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -49,3 +51,26 @@ class ContactDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         obj = self.get_object()
         return obj.creator == self.request.user
+
+
+def export_contact_list(request):
+    query_set = Contact.objects.all()
+    data_dict = {
+        "first_name": [],
+        "last_name": [],
+        "phone_number": [],
+        "email": [],
+    }
+    for item in query_set:
+        item_detail = Contact.objects.get(
+            first_name=item.first_name, last_name=item.last_name
+        )
+        data_dict["first_name"].append(item_detail.first_name)
+        data_dict["last_name"].append(item_detail.last_name)
+        data_dict["phone_number"].append(item_detail.phone_number)
+        data_dict["email"].append(item_detail.email)
+    data = pandas.DataFrame(data_dict)
+    creator_id = str(query_set[0].creator_id)
+    filename = creator_id + "_exported_contacts.csv"
+    data.to_csv("media/" + filename)
+    return FileResponse(open("media/" + filename, "rb"), as_attachment=True)
