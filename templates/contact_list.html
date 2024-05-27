@@ -14,6 +14,7 @@
         {% endfor %}
         <p class="notice">You can add contacts using the <b>New Contact</b>
             button in the site nav.</p>
+        <a href="{% url 'export' %}" title="Export Contacts">Export Contacts</a>
     {% endif %}
 
 {% endblock content %}
