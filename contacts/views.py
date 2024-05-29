@@ -54,7 +54,8 @@ class ContactDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 def export_contact_list(request):
-    query_set = Contact.objects.all()
+    query_set = Contact.objects.filter(creator=request.user.pk)
+
     data_dict = {
         "first_name": [],
         "last_name": [],
