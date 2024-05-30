@@ -1,6 +1,7 @@
-import pandas
+import csv
+
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import FileResponse
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -54,24 +55,17 @@ class ContactDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 def export_contact_list(request):
-    query_set = Contact.objects.filter(creator=request.user.pk)
-
-    data_dict = {
-        "first_name": [],
-        "last_name": [],
-        "phone_number": [],
-        "email": [],
-    }
+    query_set = Contact.objects.filter(creator=request.user.pk).order_by(
+        "last_name", "first_name"
+    )
+    response = HttpResponse(
+        content_type="text/csv",
+        headers={"Content-Disposition": 'attachment; filename="exported_contacts.csv"'},
+    )
+    writer = csv.writer(response)
+    writer.writerow(["First Name", "Last Name", "Phone Number", "Email"])
     for item in query_set:
-        item_detail = Contact.objects.get(
-            first_name=item.first_name, last_name=item.last_name
+        writer.writerow(
+            [item.last_name, item.first_name, item.phone_number, item.email]
         )
-        data_dict["first_name"].append(item_detail.first_name)
-        data_dict["last_name"].append(item_detail.last_name)
-        data_dict["phone_number"].append(item_detail.phone_number)
-        data_dict["email"].append(item_detail.email)
-    data = pandas.DataFrame(data_dict)
-    creator_id = str(query_set[0].creator_id)
-    filename = creator_id + "_exported_contacts.csv"
-    data.to_csv("media/" + filename)
-    return FileResponse(open("media/" + filename, "rb"), as_attachment=True)
+    return response
