@@ -1,6 +1,7 @@
 import csv
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
@@ -52,6 +53,21 @@ class ContactDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         obj = self.get_object()
         return obj.creator == self.request.user
+
+
+class SearchResultsView(ListView):
+    model = Contact
+    template_name = "search_results.html"
+
+    def get_queryset(self):
+        query = self.request.GET.get("search")
+        object_list = Contact.objects.filter(
+            Q(first_name__icontains=query)
+            | Q(last_name__icontains=query)
+            | Q(phone_number__icontains=query)
+            | Q(email__icontains=query)
+        )
+        return object_list
 
 
 def export_contact_list(request):

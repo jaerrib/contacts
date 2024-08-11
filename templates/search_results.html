@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h2>Search Results</h2>
+        {% for contact in object_list %}
+            <ul>
+                {% if contact.creator.pk == request.user.pk %}
+                    <li>
+                        <a href="{{ contact.get_absolute_url }}">{{ contact.last_name }}, {{ contact.first_name }} </a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endfor %}
+    {% endif %}
+
+{% endblock content %}
