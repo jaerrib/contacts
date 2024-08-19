@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <aside>
+        {% load gravatar %}
+        <img src="{% gravatar_url object.email 200 %}"
+             alt="User's Gravatar">
+    </aside>
     <article>
         <h2>{{ object.first_name }} {{ object.last_name }}</h2>
         <p>Phone number: <a
