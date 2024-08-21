@@ -5,6 +5,8 @@
         {% load gravatar %}
         <img src="{% gravatar_url object.email 200 %}"
              alt="User's Gravatar">
+        <a href="{% gravatar_profile_url object.email %}">View Gravatar
+            profile</a>
     </aside>
     <article>
         <h2>{{ object.first_name }} {{ object.last_name }}</h2>
@@ -15,7 +17,7 @@
                 href="mailto:{{ object.email }}">{{ object.email }}</a>
         </p>
         <a class="button" href="{% url 'contact_edit' contact.pk %}">Edit</a>
-        <a class="button" a
+        <a class="button"
            href="{% url 'contact_delete' contact.pk %}">Delete</a>
     </article>
 {% endblock content %}
