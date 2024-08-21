@@ -19,5 +19,10 @@
         <a class="button" href="{% url 'contact_edit' contact.pk %}">Edit</a>
         <a class="button"
            href="{% url 'contact_delete' contact.pk %}">Delete</a>
+        {% if gravatar_profile is not None %}
+            <section>
+                <p>{{ gravatar_profile }}</p>
+            </section>
+        {% endif %}
     </article>
 {% endblock content %}

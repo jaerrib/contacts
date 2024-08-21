@@ -1,5 +1,8 @@
 import csv
+import hashlib
+import json
 
+import requests
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.http import HttpResponse
@@ -19,6 +22,12 @@ class ContactListView(LoginRequiredMixin, ListView):
 class ContactDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Contact
     template_name = "contact_detail.html"
+
+    def get_context_data(self, *args, **kwargs):
+        obj = self.get_object()
+        context = super(ContactDetailView, self).get_context_data(**kwargs)
+        context["gravatar_profile"] = deserialize_gravatar_profile(obj.email)
+        return context
 
     def test_func(self):
         obj = self.get_object()
@@ -85,3 +94,46 @@ def export_contact_list(request):
             [item.last_name, item.first_name, item.phone_number, item.email]
         )
     return response
+
+
+def deserialize_gravatar_profile(email):
+    email_encoded = email.lower().encode("utf-8")
+    email_hash = hashlib.sha256(email_encoded).hexdigest()
+    url = requests.get(f"https://www.gravatar.com/{email_hash}.json")
+    if url.status_code != 200:
+        return None
+    text = url.text
+    data = json.loads(text)
+    user = data["entry"][0]
+    gravatar_profile = {
+        "hash": user["hash"],
+        "requestHash": user["requestHash"],
+        "profileUrl": user["profileUrl"],
+        "preferredUsername": user["preferredUsername"],
+        "thumbnailUrl": user["thumbnailUrl"],
+        "displayName": user["displayName"],
+        "profileBackground": {"opacity": user["profileBackground"]["opacity"]},
+        "photos": [
+            {"value": photo["value"], "type": photo["type"]} for photo in user["photos"]
+        ],
+        "accounts": [
+            {
+                "domain": account["domain"],
+                "display": account["display"],
+                "url": account["url"],
+                "iconUrl": account["iconUrl"],
+                "username": account["username"],
+                "verified": account["verified"],
+                "name": account["name"],
+                "shortname": account["shortname"],
+            }
+            for account in user["accounts"]
+        ],
+    }
+    return gravatar_profile
+
+
+# preferred_username = data["entry"][0]["preferredUsername"]
+# display_name = data["entry"][0]["displayName"]
+# print(preferred_username)
+# print(display_name)
