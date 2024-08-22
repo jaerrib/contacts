@@ -131,9 +131,3 @@ def deserialize_gravatar_profile(email):
         ],
     }
     return gravatar_profile
-
-
-# preferred_username = data["entry"][0]["preferredUsername"]
-# display_name = data["entry"][0]["displayName"]
-# print(preferred_username)
-# print(display_name)
