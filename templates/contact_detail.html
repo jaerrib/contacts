@@ -5,8 +5,6 @@
         {% load gravatar %}
         <img src="{% gravatar_url object.email 200 %}"
              alt="User's Gravatar">
-        <a href="{% gravatar_profile_url object.email %}">View Gravatar
-            profile</a>
     </aside>
     <article>
         <h2>{{ object.first_name }} {{ object.last_name }}</h2>
@@ -19,5 +17,27 @@
         <a class="button" href="{% url 'contact_edit' contact.pk %}">Edit</a>
         <a class="button"
            href="{% url 'contact_delete' contact.pk %}">Delete</a>
+        {% if gravatar_profile is not None %}
+            <section>
+            <h3><a href="{{ gravatar_profile.profileUrl }}">Gravatar
+                Profile</a></h3>
+            <h4>Verified Accounts</h4>
+            {% for account in gravatar_profile.accounts %}
+                <p>
+                    <img src="{{ account.iconUrl }}"
+                         alt="{{ account.name }} icon"
+                         height="20px" width="20px">
+                    <a href="{{ account.url }}">
+                        {{ account.name }}
+                    </a>
+                </p>
+            {% endfor %}
+            <hr>
+            <h4>Associated Images</h4>
+            {% for photo in gravatar_profile.photos %}
+                <img src="{{ photo.value }}" alt="image">
+            {% endfor %}
+        {% endif %}
+        </section>
     </article>
 {% endblock content %}
