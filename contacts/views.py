@@ -27,6 +27,7 @@ class ContactDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         obj = self.get_object()
         context = super(ContactDetailView, self).get_context_data(**kwargs)
         context["gravatar_profile"] = deserialize_gravatar_profile(obj.email)
+        context["history"] = obj.history.all()
         return context
 
     def test_func(self):

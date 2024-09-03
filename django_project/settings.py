@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_gravatar",
+    "simple_history",
     "contacts",
     "accounts",
 ]
@@ -141,3 +142,6 @@ LOGIN_REDIRECT_URL = "contact_list"
 LOGOUT_REDIRECT_URL = "contact_list"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# django-simple-history
+SIMPLE_HISTORY_REVERT_DISABLED = True

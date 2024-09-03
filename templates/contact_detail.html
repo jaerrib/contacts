@@ -40,4 +40,39 @@
         {% endif %}
         </section>
     </article>
+    <section>
+        <h3>Entry History</h3>
+        {% if history %}
+            <table style="font-size: .75em;">
+                <thead>
+                <tr>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Change Type</th>
+                    <th>Day/Time</th>
+                    <td>User</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for record in history %}
+                    <tr>
+                        <td>{{ record.last_name }}</td>
+                        <td>{{ record.first_name }}</td>
+                        <td>{{ record.phone_number }}</td>
+                        <td>{{ record.email }}</td>
+                        <td>
+                            {{ record.history_type }}
+                        </td>
+                        <td>{{ record.history_date }}</td>
+                        <td>{{ record.history_user }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No changes</p>
+        {% endif %}
+    </section>
 {% endblock content %}

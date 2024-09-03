@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from simple_history.models import HistoricalRecords
 
 
 class Contact(models.Model):
@@ -11,6 +12,15 @@ class Contact(models.Model):
         "auth.User",
         on_delete=models.CASCADE,
     )
+    history = HistoricalRecords()
+
+    @property
+    def _history_user(self):
+        return self.creator
+
+    @_history_user.setter
+    def _history_user(self, value):
+        self.creator = value
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
